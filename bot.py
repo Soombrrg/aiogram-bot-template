@@ -2,6 +2,8 @@ import asyncio
 import logging
 
 from aiogram import Dispatcher, Bot
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.storage.redis import RedisStorage
 
@@ -17,7 +19,7 @@ async def main() -> None:
 
     storage = RedisStorage() if config.tg_bot.use_redis else MemoryStorage()
 
-    bot = Bot(token=config)
+    bot = Bot(token=config.tg_bot.token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher(storage=storage)
 
     try:
