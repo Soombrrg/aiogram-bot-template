@@ -1,7 +1,15 @@
-FROM python:3.9-buster
+FROM python:3.13-alpine AS poll_bot
 
-WORKDIR /usr/src/app/tg_bot
+ENV PYTHONUNBUFFERED=1
 
-COPY requirements.txt /usr/src/app/tg_bot/
-RUN pip install -r /usr/src/app/tg_bot/requirements.txt
-COPY aiogram-dialog /usr/src/app/tg_bot
+RUN apk add \
+    build-base
+
+COPY requirements.txt /temp/requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip pip install -r /temp/requirements.txt
+
+COPY tg_bot /tg_bot
+WORKDIR /tg_bot
+
+RUN adduser --disabled-password botuser
+USER botuser
