@@ -3,11 +3,14 @@ services:
     image: "bot"
     stop_signal: SIGINT
     build:
-      context: aiogram-dialog
+      context: .
     working_dir: "/usr/src/app/tg_bot"
     volumes:
       - .:/usr/src/app/tg_bot
-    command: python3 -m bot
+    command: >
+      sh -c "python main.py"
+#    depends_on:
+#      - redis
     restart: always
     env_file:
       - ".env"
@@ -17,3 +20,36 @@ services:
 networks:
   tg_bot:
     driver: bridge
+
+# Redis configuration
+#  redis:
+#    image: redis:alpine
+#    container_name: redis
+#    restart: always
+#    volumes:
+#      - redis_data:/data
+#    ports:
+#      - '6379:6379'
+#    command: redis-server --appendonly yes
+#    networks:
+#      - tg_bot
+#
+#  redis_insight:
+#    image: redislabs/redisinsight:1.14.0
+#    container_name: redis_insight
+#    restart: always
+#    ports:
+#      - '8001:8001'
+#    volumes:
+#      - redis_insight_data:/db
+#    depends_on:
+#      - redis
+#    networks:
+#      - tg_bot
+
+#volumes:
+#  redis_data:
+#  redis_insight_data:
+
+
+
